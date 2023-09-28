@@ -40,16 +40,18 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
 
   const handlePing = async () => {
     try {
-      console.log('initializing ping');
       const pong = await ping();
       Toast.show({
         type: 'success',
         text1: pong.toUpperCase(),
         position: 'bottom',
       });
-      console.log(pong);
     } catch (error) {
-      console.log(error);
+      Toast.show({
+        type: 'error',
+        text1: `${error ?? 'error'}`,
+        position: 'bottom',
+      });
     }
   };
 

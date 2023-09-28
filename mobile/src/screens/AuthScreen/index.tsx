@@ -16,6 +16,11 @@ import {
   faTwitter,
   faGithub,
 } from '@fortawesome/free-brands-svg-icons';
+import {
+  faPingPongPaddleBall,
+  faTableTennisPaddleBall,
+} from '@fortawesome/free-solid-svg-icons';
+
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {RootStackParamList} from '../../types';
 import {CLIENTS} from '../../constants';
@@ -26,6 +31,7 @@ import {
 } from '../../utils/utils';
 import Toast from 'react-native-toast-message';
 import {useFocusEffect} from '@react-navigation/native';
+import {ping} from '../../api/authService';
 
 interface Props {
   navigation: StackNavigationProp<RootStackParamList, 'home'>;
@@ -82,6 +88,23 @@ const AuthScreen: React.FC<Props> = ({navigation}) => {
     openUrl(buildUrlLogin(client));
   };
 
+  const handlePing = async () => {
+    try {
+      const pong = await ping();
+      Toast.show({
+        type: 'success',
+        text1: pong.toUpperCase(),
+        position: 'bottom',
+      });
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: `${error ?? 'error'}`,
+        position: 'bottom',
+      });
+    }
+  };
+
   return (
     <>
       {uri !== '' ? (
@@ -122,6 +145,20 @@ const AuthScreen: React.FC<Props> = ({navigation}) => {
               <FontAwesomeIcon icon={faGithub} size={24} color="black" />
             </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            onPress={handlePing}
+            style={{
+              ...styles.button,
+              padding: 5,
+              width: '100%',
+            }}>
+            <FontAwesomeIcon
+              icon={faTableTennisPaddleBall}
+              size={24}
+              color="green"
+            />
+            <Text style={styles.buttonText}>PING</Text>
+          </TouchableOpacity>
         </SafeAreaView>
       )}
     </>
@@ -156,6 +193,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     textTransform: 'uppercase',
+  },
+  buttonContainer: {
+    display: 'flex',
+    gap: 20,
+    flexShrink: 1,
+  },
+  buttonText: {
+    color: 'black',
+    marginLeft: 5,
   },
 });
 
